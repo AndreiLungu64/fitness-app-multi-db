@@ -9,20 +9,20 @@ export interface Employee {
 class EmployeeRepository {
   // Get all employees
   async getAll(): Promise<Employee[]> {
-    const result = await query('SELECT * FROM employees ORDER BY id ASC');
+    const result = await query('SELECT * FROM fitapp_employees ORDER BY id ASC');
     return result.rows;
   }
 
   // Get employee by ID
   async getById(id: number): Promise<Employee | null> {
-    const result = await query('SELECT * FROM employees WHERE id = $1', [id]);
+    const result = await query('SELECT * FROM fitapp_employees WHERE id = $1', [id]);
     return result.rows.length ? result.rows[0] : null;
   }
 
   // Create a new employee
   async create(employee: Omit<Employee, 'id'>): Promise<Employee> {
     const result = await query(
-      'INSERT INTO employees (firstname, lastname) VALUES ($1, $2) RETURNING *',
+      'INSERT INTO fitapp_employees (firstname, lastname) VALUES ($1, $2) RETURNING *',
       [employee.firstname, employee.lastname]
     );
     return result.rows[0];
@@ -46,16 +46,14 @@ class EmployeeRepository {
       paramIndex++;
     }
 
-    // If no fields to update, return the current employee
     if (updates.length === 0) {
       return this.getById(id);
     }
 
-    // Add id as the last parameter
     values.push(id);
 
     const result = await query(
-      `UPDATE employees SET ${updates.join(', ')} WHERE id = $${paramIndex} RETURNING *`,
+      `UPDATE fitapp_employees SET ${updates.join(', ')} WHERE id = $${paramIndex} RETURNING *`,
       values
     );
 
@@ -63,7 +61,7 @@ class EmployeeRepository {
   }
 
   async delete(id: number): Promise<boolean> {
-    const result = await query('DELETE FROM employees WHERE id = $1', [id]);
+    const result = await query('DELETE FROM fitapp_employees WHERE id = $1', [id]);
     return result.rowCount ? result.rowCount > 0 : false;
   }
 }
