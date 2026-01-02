@@ -1,8 +1,3 @@
-/*
-Database initialization for PostgreSQL only.
-MongoDB doesn't require schema initialization (schemaless).
-*/
-
 import fs from 'fs';
 import path from 'path';
 import pool from './db.js';
@@ -13,7 +8,7 @@ const __dirname = path.dirname(__filename);
 
 async function initializePostgreSQL() {
   try {
-    const schemaFilePath = path.join(__dirname, '../../schema_fitness_app.sql');
+    const schemaFilePath = path.join(__dirname, '/queries/schema_fitness_app.sql');
     const schema = fs.readFileSync(schemaFilePath, 'utf8');
 
     const client = await pool.connect();
@@ -35,7 +30,6 @@ async function initializePostgreSQL() {
   }
 }
 
-// Run the initialization if this file is executed directly
 if (import.meta.url === new URL(import.meta.url, import.meta.url).href) {
   initializePostgreSQL()
     .then(() => {

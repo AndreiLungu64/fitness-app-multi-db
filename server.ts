@@ -3,10 +3,10 @@ import path from 'path';
 import cors from 'cors';
 import { corsOptions } from './config/corsOptions.js';
 import { logger } from './middleware/logEvents.js';
-import errorHandler from './middleware/errorHandler.js';
+import { errorHandler } from './middleware/errorHandler.js';
 import verifyJWT from './middleware/verifyJWT.js';
 import cookieParser from 'cookie-parser';
-import credentials from './middleware/credentials.js';
+import { credentials } from './middleware/credentials.js';
 import { connectMongo } from './config/mongo.js';
 
 import { fileURLToPath } from 'url';
