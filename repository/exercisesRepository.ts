@@ -12,13 +12,11 @@ export interface Exercise {
 }
 
 class ExerciseRepository {
-  // Get all exercises
   async getAll(): Promise<Exercise[]> {
     const result = await query('SELECT * FROM fitapp_exercises ORDER BY id ASC');
     return result.rows;
   }
 
-  // Get exercises by muscle group
   async getByMuscleGroup(muscleGroup: string): Promise<Exercise[]> {
     const result = await query(
       'SELECT * FROM fitapp_exercises WHERE muscle_group = $1 ORDER BY id ASC',
@@ -27,7 +25,6 @@ class ExerciseRepository {
     return result.rows;
   }
 
-  // Get exercises by difficulty
   async getByDifficulty(difficulty: string): Promise<Exercise[]> {
     const result = await query(
       'SELECT * FROM fitapp_exercises WHERE difficulty = $1 ORDER BY id ASC',
@@ -36,13 +33,11 @@ class ExerciseRepository {
     return result.rows;
   }
 
-  // Get exercise by ID
   async getById(id: number): Promise<Exercise | null> {
     const result = await query('SELECT * FROM fitapp_exercises WHERE id = $1', [id]);
     return result.rows.length ? result.rows[0] : null;
   }
 
-  // Create a new exercise
   async create(exercise: Omit<Exercise, 'id' | 'created_at'>): Promise<Exercise> {
     const result = await query(
       'INSERT INTO fitapp_exercises (name, description, muscle_group, difficulty, equipment, instructions) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
@@ -58,7 +53,6 @@ class ExerciseRepository {
     return result.rows[0];
   }
 
-  // Update an exercise
   async update(id: number, exercise: Partial<Exercise>): Promise<Exercise | null> {
     const updates: string[] = [];
     const values: any[] = [];
@@ -114,7 +108,6 @@ class ExerciseRepository {
     return result.rows.length ? result.rows[0] : null;
   }
 
-  // Delete an exercise
   async delete(id: number): Promise<boolean> {
     const result = await query('DELETE FROM fitapp_exercises WHERE id = $1', [id]);
     return result.rowCount ? result.rowCount > 0 : false;

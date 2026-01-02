@@ -15,26 +15,22 @@ function docToUser(doc: any): User {
 }
 
 class UsersRepositoryMongo {
-  // Get all users
   async getAll(): Promise<User[]> {
     const db = await getMongoDb();
     const docs = await db.collection(COLLECTION).find({}).toArray();
     return docs.map(docToUser);
   }
 
-  // Get user by username
   async getByUsername(username: string): Promise<User | null> {
     const db = await getMongoDb();
     const doc = await db.collection(COLLECTION).findOne({ username });
     return doc ? docToUser(doc) : null;
   }
 
-  // Get user by ID
   async getById(id: string | number): Promise<User | null> {
     const db = await getMongoDb();
     let doc;
 
-    // Handle both ObjectId and custom ID
     if (typeof id === 'string' && ObjectId.isValid(id)) {
       doc = await db.collection(COLLECTION).findOne({ _id: new ObjectId(id) });
     } else {
@@ -44,7 +40,6 @@ class UsersRepositoryMongo {
     return doc ? docToUser(doc) : null;
   }
 
-  // Create a new user
   async create(user: { username: string; password: string; roles?: Roles }): Promise<User> {
     const db = await getMongoDb();
     const roles = user.roles || { User: 2001 };
@@ -62,7 +57,6 @@ class UsersRepositoryMongo {
     return docToUser(newUser);
   }
 
-  // Update user
   async update(username: string, updates: Partial<User>): Promise<User | null> {
     const db = await getMongoDb();
     const updateDoc: any = { updatedAt: new Date() };
@@ -86,7 +80,6 @@ class UsersRepositoryMongo {
     return result ? docToUser(result) : null;
   }
 
-  // Update refresh token
   async updateRefreshToken(username: string, refreshToken: string): Promise<User | null> {
     const db = await getMongoDb();
     const result = await db
@@ -100,7 +93,6 @@ class UsersRepositoryMongo {
     return result ? docToUser(result) : null;
   }
 
-  // Clear refresh token (for logout)
   async clearRefreshToken(username: string): Promise<User | null> {
     const db = await getMongoDb();
     const result = await db
@@ -114,7 +106,6 @@ class UsersRepositoryMongo {
     return result ? docToUser(result) : null;
   }
 
-  // Delete user
   async delete(username: string): Promise<boolean> {
     const db = await getMongoDb();
     const result = await db.collection(COLLECTION).deleteOne({ username });

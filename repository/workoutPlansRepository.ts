@@ -34,13 +34,11 @@ export interface WorkoutPlanWithExercises extends WorkoutPlan {
 }
 
 class WorkoutPlansRepository {
-  // Get all workout plans
   async getAll(): Promise<WorkoutPlan[]> {
     const result = await query('SELECT * FROM fitapp_workout_plans ORDER BY id ASC');
     return result.rows;
   }
 
-  // Get workout plans by user ID
   async getByUserId(userId: string): Promise<WorkoutPlan[]> {
     const result = await query(
       'SELECT * FROM fitapp_workout_plans WHERE user_id = $1 ORDER BY created_at DESC',
@@ -49,13 +47,11 @@ class WorkoutPlansRepository {
     return result.rows;
   }
 
-  // Get workout plan by ID
   async getById(id: number): Promise<WorkoutPlan | null> {
     const result = await query('SELECT * FROM fitapp_workout_plans WHERE id = $1', [id]);
     return result.rows.length ? result.rows[0] : null;
   }
 
-  // Get workout plan with exercises
   async getByIdWithExercises(id: number): Promise<WorkoutPlanWithExercises | null> {
     const plan = await this.getById(id);
     if (!plan) return null;
@@ -83,7 +79,6 @@ class WorkoutPlansRepository {
     };
   }
 
-  // Create a new workout plan
   async create(
     workoutPlan: Omit<WorkoutPlan, 'id' | 'created_at' | 'updated_at'>
   ): Promise<WorkoutPlan> {
@@ -94,7 +89,6 @@ class WorkoutPlansRepository {
     return result.rows[0];
   }
 
-  // Update a workout plan
   async update(id: number, updates: Partial<WorkoutPlan>): Promise<WorkoutPlan | null> {
     const updateFields: string[] = [];
     const values: any[] = [];
@@ -129,13 +123,11 @@ class WorkoutPlansRepository {
     return result.rows.length ? result.rows[0] : null;
   }
 
-  // Delete a workout plan
   async delete(id: number): Promise<boolean> {
     const result = await query('DELETE FROM fitapp_workout_plans WHERE id = $1', [id]);
     return result.rowCount ? result.rowCount > 0 : false;
   }
 
-  // Add exercise to workout plan
   async addExercise(
     workoutPlanId: number,
     exerciseId: number,
@@ -156,7 +148,6 @@ class WorkoutPlansRepository {
     return result.rows[0];
   }
 
-  // Remove exercise from workout plan
   async removeExercise(workoutPlanId: number, exerciseId: number): Promise<boolean> {
     const result = await query(
       'DELETE FROM fitapp_workout_plan_exercises WHERE workout_plan_id = $1 AND exercise_id = $2',
@@ -165,7 +156,6 @@ class WorkoutPlansRepository {
     return result.rowCount ? result.rowCount > 0 : false;
   }
 
-  // Get all exercises in a workout plan
   async getExercises(workoutPlanId: number): Promise<any[]> {
     const result = await query(
       `SELECT 

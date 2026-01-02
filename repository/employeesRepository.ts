@@ -7,19 +7,16 @@ export interface Employee {
 }
 
 class EmployeeRepository {
-  // Get all employees
   async getAll(): Promise<Employee[]> {
     const result = await query('SELECT * FROM fitapp_employees ORDER BY id ASC');
     return result.rows;
   }
 
-  // Get employee by ID
   async getById(id: number): Promise<Employee | null> {
     const result = await query('SELECT * FROM fitapp_employees WHERE id = $1', [id]);
     return result.rows.length ? result.rows[0] : null;
   }
 
-  // Create a new employee
   async create(employee: Omit<Employee, 'id'>): Promise<Employee> {
     const result = await query(
       'INSERT INTO fitapp_employees (firstname, lastname) VALUES ($1, $2) RETURNING *',
@@ -28,7 +25,6 @@ class EmployeeRepository {
     return result.rows[0];
   }
 
-  // Update an employee
   async update(id: number, employee: Partial<Employee>): Promise<Employee | null> {
     const updates: string[] = [];
     const values: any[] = [];
