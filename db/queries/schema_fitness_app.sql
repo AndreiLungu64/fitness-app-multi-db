@@ -58,3 +58,10 @@ INSERT INTO fitapp_exercises (name, description, muscle_group, difficulty, equip
 ('Bench Press', 'Upper body pressing exercise', 'chest', 'intermediate', 'barbell', 'Lie on bench, lower bar to chest, press up'),
 ('Pull-ups', 'Upper body pulling exercise', 'back', 'intermediate', 'pull-up bar', 'Hang from bar, pull body up until chin over bar')
 ON CONFLICT DO NOTHING;
+
+INSERT INTO fitapp_employees (firstname, lastname) VALUES
+('John', 'Doe'),
+('Jane', 'Smith'),
+('Mike', 'Johnson'),
+('Sarah', 'Williams'),
+('Tom', 'Brown');

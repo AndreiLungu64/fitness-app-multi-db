@@ -38,7 +38,6 @@ connectMongo().catch(err => {
 app.use(logger);
 
 // Handle options credentials check - before CORS!
-// and fetch cookies credentials requirement
 app.use(credentials);
 
 // Cross Origin Resource Sharing
@@ -56,17 +55,17 @@ app.use(cookieParser());
 // Serve static files
 app.use('/', express.static(path.join(__dirname, '/public')));
 
-// Routes
+// PUBLIC Routes (no authentication required)
 app.use('/', rootRoutes);
 app.use('/register', registerRoutes);
 app.use('/auth', authRoutes);
 app.use('/refresh', refreshRoutes);
 app.use('/logout', logoutRoutes);
+app.use('/employees', employeeRoutes);
+app.use('/api/exercises', exerciseRoutes);
 
 // Protected routes (require JWT)
 app.use(verifyJWT);
-app.use('/employees', employeeRoutes);
-app.use('/api/exercises', exerciseRoutes);
 app.use('/api/workout-plans', workoutPlansRoutes);
 
 // 404 handler
