@@ -1,14 +1,8 @@
-/*
-This file manages the PostgreSQL database connection pool for fitness data.
-MongoDB connection is handled separately in config/mongo.ts
-*/
-
 import pkg from 'pg';
 const { Pool } = pkg;
 import dotenv from 'dotenv';
 dotenv.config();
 
-// PostgreSQL connection pool for fitness data
 const fitnessPool = new Pool({
   host: process.env.DB_HOST || 'localhost',
   port: parseInt(process.env.DB_PORT || '5432'),
@@ -17,7 +11,6 @@ const fitnessPool = new Pool({
   password: process.env.DB_PASSWORD,
 });
 
-// Test PostgreSQL connection
 fitnessPool.connect((err, client, release) => {
   if (err) {
     return console.error('❌ Error acquiring client from PostgreSQL', err.stack);
@@ -32,8 +25,6 @@ fitnessPool.connect((err, client, release) => {
   });
 });
 
-// Export query method for PostgreSQL
 export const query = (text: string, params?: any[]) => fitnessPool.query(text, params);
 
-// Export pool for direct use
 export default fitnessPool;
